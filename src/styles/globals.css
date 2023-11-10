@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Dans votre fichier CSS */
+.text-color {
+  color: #333; /* Couleur pour le mode clair */
+}
+
+.dark .text-color {
+  color: #ddd; /* Couleur pour le mode sombre */
+}
