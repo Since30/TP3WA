@@ -2,37 +2,43 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ToggleHead from '../../components/ToggleHead';
 
+interface Currency {
+  code: string;
+  name: string;
+  symbol: string;
+}
 
+interface Language {
+  iso639_1: string;
+  iso639_2: string;
+  name: string;
+  nativeName: string;
+}
 
- 
 interface CountryDetailProps {
-    name: string;
-    nativeName: string;
-    population: number;
-    region: string;
-    subregion: string;
-    capital: string;
-    topLevelDomain: string[];
-    currencies: Array<{ code: string; name: string; symbol: string }>;
-    languages: Array<{ iso639_1: string; iso639_2: string; name: string; nativeName: string }>;
-    flag: string;
-    borders?: string[];
-    
-  }
-
-  
+  name: string;
+  nativeName: string;
+  population: number;
+  region: string;
+  subregion: string;
+  capital: string;
+  topLevelDomain: string[];
+  currencies: Currency[];
+  languages: Language[];
+  flag: string;
+  borders?: string[];
+}
 
 const CountryDetailPage: React.FC = () => {
   const [country, setCountry] = useState<CountryDetailProps | null>(null);
   const router = useRouter();
   const { id } = router.query;
 
-
   useEffect(() => {
     async function fetchCountryData() {
       if (typeof id === 'string') {
         const response = await fetch(`https://restcountries.com/v2/alpha/${id}`);
-        const data = await response.json();
+        const data: CountryDetailProps = await response.json();
         setCountry(data);
       }
     }
@@ -44,11 +50,13 @@ const CountryDetailPage: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const navigateToBorderCountry = (borderCountryCode: string) => {
+    router.push(`/country/${borderCountryCode}`);
+  };
+
   return (
-    
     <div className="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white min-h-screen">
-       <ToggleHead />
-   
+      <ToggleHead />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button onClick={() => router.back()} className="mb-12 text-sm px-4 py-2 rounded shadow bg-gray-200 dark:bg-gray-600">
           Back
@@ -78,9 +86,12 @@ const CountryDetailPage: React.FC = () => {
               <h2 className="text-xl font-semibold mb-2">Border Countries:</h2>
               <div className="flex flex-wrap">
                 {country.borders?.map(border => (
-                  <span key={border} className="m-1 px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded shadow">
+                  <button 
+                    key={border} 
+                    onClick={() => navigateToBorderCountry(border)}
+                    className="m-1 px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded shadow">
                     {border}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>

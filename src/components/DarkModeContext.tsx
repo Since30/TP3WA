@@ -22,14 +22,14 @@ interface DarkModeProviderProps {
 export const DarkModeProvider: FunctionComponent<DarkModeProviderProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
-  // Écouter les changements de l'état du mode sombre et mettre à jour le localStorage et la classe
+ 
   useEffect(() => {
     localStorage.setItem('darkMode', darkMode.toString());
     const root = window.document.documentElement;
     root.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
-  // Charger l'état initial du mode sombre du localStorage côté client
+  
   useEffect(() => {
     const savedMode = localStorage.getItem('darkMode') === 'true';
     setDarkMode(savedMode);
